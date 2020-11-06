@@ -1,6 +1,7 @@
 let messageApi = Vue.resource('/book{/id}');
 
-console.log(Vue.resource('/book'))
+console.log(Vue.resource('/book'));
+
 function getIndex(list, id) {
     for (let i = 0; i < list.length; i++) {
         if (list[i].id === id) {
@@ -8,7 +9,7 @@ function getIndex(list, id) {
         }
     }
     return -1;
-}
+};
 
 Vue.component('add-book-form', {
     props: ['books','bookAttr'],
@@ -23,6 +24,7 @@ Vue.component('add-book-form', {
     },
     watch:{
         bookAttr:function (newVal, oldVal) {
+            this.id = newVal.id;
             this.title = newVal.title;
             this.genre = newVal.genre;
             this.date = newVal.date;
@@ -32,8 +34,8 @@ Vue.component('add-book-form', {
     template: '<div>' +
         '<input type="text" placeholder="Book title" v-model="title"><br>' +
         '<input type="text" placeholder="Book genre" v-model="genre"><br>' +
-        '<input type="text" placeholder="Book date" v-model="date"><br>' +
-        '<input type="text" placeholder="Book coast" v-model="coast"><br>' +
+        '<input type="date" placeholder="Book date" v-model="date"><br>' +
+        '<input type="number" placeholder="Book coast" v-model="coast"><br>' +
         '<input type="button" value="Save" @click="save">' +
         '</div>',
     methods: {
@@ -71,7 +73,7 @@ Vue.component('add-book-form', {
         }
 
     }
-})
+});
 
 Vue.component('table-row', {
     props: ['book','editMethod','books'],
@@ -90,34 +92,42 @@ Vue.component('table-row', {
         del : function () {
             messageApi.remove({id: this.book.id}).then(result =>{
                 if (result.ok){
-                    this.book.splice(this.books.indexOf(this.book),1);
+                    this.books.splice(this.books.indexOf(this.book),1);
                 }
             })
         }
     }
 });
+
 Vue.component('books-table',{
     props:['books'],
-    template:'<table>' +
+    data: function(){
+      return {
+          book: null
+      }
+    },
+    template:'<div>'+
+        '<add-book-form :books="books" :bookAttr="book"></add-book-form>' +
+        '<table>' +
         '<th>Название</th>' +
         '<th>Жанр</th>' +
         '<th>Дата выпуска</th>' +
         '<th>Цена</th>' +
         '<th>Delete/Edit</th>' +
         '<table-row v-for="book in books" :editMethod="editMethod" :key="book.id" :book="book" :books="books"/>' +
-        '</table>',
+        '</table>'+
+        '</div>',
     methods:{
         editMethod: function (book) {
             this.book = book;
         }
     }
-})
+});
 
 
 const app = new Vue({
     el: '#app',
     template: '<div>' +
-        '<add-book-form :books="books" :bookAttr="book"></add-book-form>' +
         '<books-table :books="books"></books-table>'+
         '</div>',
     data: {
@@ -127,6 +137,13 @@ const app = new Vue({
         {
             path:'book'
         }
-    ]
+    ],
+    created: function () {
+        messageApi.get().then(result =>
+            result.json().then(data => {
+                data.forEach(book => this.books.push(book))
+            })
+        );
+    }
 
 });
