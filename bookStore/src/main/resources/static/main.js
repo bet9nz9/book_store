@@ -1,6 +1,5 @@
 let messageApi = Vue.resource('/book{/id}');
-
-console.log(Vue.resource('/book'));
+let booksApi = Vue.resource('/book/sorted{/id}');
 
 function getIndex(list, id) {
     for (let i = 0; i < list.length; i++) {
@@ -59,7 +58,6 @@ Vue.component('add-book-form', {
                     })
                 )
             } else {
-                console.log(book);
                 messageApi.save({}, book).then(result =>
                     result.json().then(data => {
                         this.books.push(data);
@@ -111,8 +109,8 @@ Vue.component('books-table',{
         '<table>' +
         '<th>Название</th>' +
         '<th>Жанр</th>' +
-        '<th>Дата выпуска</th>' +
-        '<th>Цена</th>' +
+        '<th @click="sortByDate">Дата выпуска</th>' +
+        '<th @click=sortByPrice>Цена </th>' +
         '<th>Delete/Edit</th>' +
         '<table-row v-for="book in books" :editMethod="editMethod" :key="book.id" :book="book" :books="books"/>' +
         '</table>'+
@@ -120,6 +118,22 @@ Vue.component('books-table',{
     methods:{
         editMethod: function (book) {
             this.book = book;
+        },
+        sortByDate: function () {
+            this.books.length = 0;
+            booksApi.get({id: 1}).then(result =>
+                result.json().then(data => {
+                    data.forEach(book => this.books.push(book))
+                })
+            );
+        },
+        sortByPrice: function () {
+            this.books.length = 0;
+            booksApi.get({id: 2}).then(result =>
+                result.json().then(data => {
+                    data.forEach(book => this.books.push(book))
+                })
+            );
         }
     }
 });
