@@ -1,6 +1,7 @@
 package com.example.bookStore.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -8,7 +9,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     private String name;
     private String username;
     private String password;
@@ -16,15 +17,29 @@ public class User {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> role;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "UserLibrary",
+            joinColumns = {
+                @JoinColumn(name = "book_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "usr_id")
+            }
+    )
+    private Set<Book> userLibrary = new HashSet<>();
 
     public User() {
     }
 
-    public User(String name, String username, String password, Set<Role> role) {
+    public User(String name, String username, String password, Set<Role> role, Set<Book> userLibrary) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.userLibrary = userLibrary;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -57,5 +72,13 @@ public class User {
 
     public void setRole(Set<Role> role) {
         this.role = role;
+    }
+
+    public Set<Book> getUserLibrary() {
+        return userLibrary;
+    }
+
+    public void setUserLibrary(Set<Book> userLibrary) {
+        this.userLibrary = userLibrary;
     }
 }

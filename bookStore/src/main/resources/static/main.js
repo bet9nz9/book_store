@@ -80,8 +80,11 @@ Vue.component('table-row', {
         '<td>{{book.genre}}</td>' +
         '<td>{{book.date}}</td>' +
         '<td>{{book.coast}}</td>' +
+        '<span>' +
         '<input type="button" value="Edit" @click="edit">' +
         '<input type="button" value="X" @click="del">' +
+        '</span>'+
+        '<input type="button" value="Add" @click="addBook">'+
         '</tr>',
     methods: {
         edit: function () {
@@ -93,6 +96,9 @@ Vue.component('table-row', {
                     this.books.splice(this.books.indexOf(this.book),1);
                 }
             })
+        },
+        addBook: function () {
+
         }
     }
 });
@@ -112,6 +118,7 @@ Vue.component('books-table',{
         '<th @click="sortByDate">Дата выпуска</th>' +
         '<th @click=sortByPrice>Цена </th>' +
         '<th>Delete/Edit</th>' +
+        '<th> </th>' +
         '<table-row v-for="book in books" :editMethod="editMethod" :key="book.id" :book="book" :books="books"/>' +
         '</table>'+
         '</div>',

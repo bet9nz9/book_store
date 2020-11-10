@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -14,7 +17,9 @@ public class Book {
     private String genre;
     private String date;
     private String coast;
-    private Integer views;
+    private Integer addings;
+    @ManyToMany(mappedBy = "userLibrary")
+    private Set<User> users = new HashSet<>();
 
     public Book() {
     }
@@ -64,5 +69,9 @@ public class Book {
 
     public void setCoast(String coast) {
         this.coast = coast;
+    }
+
+    public void incrementAddings() {
+        this.addings++;
     }
 }

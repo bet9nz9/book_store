@@ -8,7 +8,10 @@
 
     </head>
     <body>
-        <h3>Hello</h3>
+        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
         <div id="app"></div>
         <script src="main.js"></script>
     </body>
