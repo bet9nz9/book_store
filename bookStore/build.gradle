@@ -39,6 +39,7 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	compile("javax.persistence:javax.persistence-api:2.2")
+
 }
 
 test {

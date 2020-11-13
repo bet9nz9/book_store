@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class Book {
     private String coast;
     private Integer addings;
     @ManyToMany(mappedBy = "userLibrary")
-    private Set<User> users = new HashSet<>();
+    private Set<Users> users = new HashSet<>();
 
     public Book() {
     }
@@ -71,7 +72,27 @@ public class Book {
         this.coast = coast;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id.equals(book.id) &&
+                title.equals(book.title) &&
+                Objects.equals(genre, book.genre) &&
+                Objects.equals(date, book.date) &&
+                Objects.equals(coast, book.coast) &&
+                Objects.equals(addings, book.addings) &&
+                Objects.equals(users, book.users);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, genre, date, coast, addings, users);
+    }
+
     public void incrementAddings() {
         this.addings++;
     }
+
 }
