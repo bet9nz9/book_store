@@ -1,14 +1,10 @@
 package com.example.bookStore.entity;
 
-//import javax.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "usr")
@@ -32,12 +28,12 @@ public class Users implements UserDetails {
                     @JoinColumn(name = "usr_id")
             }
     )
-    private Set<Book> userLibrary = new HashSet<>();
+    private List<Book> userLibrary = new ArrayList<>();
 
     public Users() {
     }
 
-    public Users(String name, String username, String password, Set<Role> role, Set<Book> userLibrary) {
+    public Users(String name, String username, String password, Set<Role> role, List<Book> userLibrary) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -106,15 +102,16 @@ public class Users implements UserDetails {
         return role;
     }
 
-    public void setRole(Set<Role> role) {
-        this.role = role;
+    public void setRole(String role) {
+        this.role = new HashSet<>();
+        this.role.add(Role.valueOf(role));
     }
 
-    public Set<Book> getUserLibrary() {
+    public List<Book> getUserLibrary() {
         return userLibrary;
     }
 
-    public void setUserLibrary(Set<Book> userLibrary) {
+    public void setUserLibrary(List<Book> userLibrary) {
         this.userLibrary = userLibrary;
     }
 
